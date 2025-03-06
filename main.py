@@ -1,4 +1,6 @@
 import argparse
+import json
+import os
 
 
 def create_parser():
@@ -12,6 +14,18 @@ def create_parser():
     #test:hello (just to test the CLI)
     hello_parser = subparsers.add_parser("hello", help="Say hello")
     return parser
+
+def load_data(file_path="expenses.json"):
+    if not os.path.exists(file_path):
+        return []
+    with open(file_path, "r") as file:
+        try:
+            data = json.load(file)
+        except json.JSONDecodeError:
+            #empty or corrupted file here so return an empty list.
+            return []
+    return data
+
 
 def main():
     parser = create_parser()#Create the argument parser
