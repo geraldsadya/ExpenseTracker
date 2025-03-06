@@ -26,6 +26,9 @@ def load_data(file_path="expenses.json"):
             return []
     return data
 
+def save_data(data, file_path="expenses.json"):
+    with open(file_path, "w") as file:
+        json.dump(data, file, indent=4)
 
 def main():
     parser = create_parser()#Create the argument parser
