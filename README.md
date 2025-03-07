@@ -143,7 +143,7 @@ Want to take this to the next level? Here are some **potential upgrades**:
 ---
 
 ## 🏆 Contributors & Acknowledgments
-Built with ❤️ by [Your Name](https://github.com/yourusername).  
+Built with ❤️ by [Gerald Sadya](https://github.com/geraldsadya).  
 Inspired by the need for a **quick, no-fuss way to track expenses** without spreadsheets.  
 
 ---
