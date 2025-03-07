@@ -20,6 +20,10 @@ def create_parser():
     #command to list all expenses
     list_parser = subparsers.add_parser("list", help="List all expenses")
 
+    #command to delete an expense
+    delete_parser = subparsers.add_parser("delete", help="Delete an expense by ID")
+    delete_parser.add_argument("--id", type=int, required=True, help="ID of the expense to delete")
+
     return parser
 
 def load_data(file_path="expenses.json"):
@@ -67,15 +71,29 @@ def list_expenses(file_path="expenses.json"):
         print(f"{expense['id']:<5} {expense['date']:<12} {expense['description']:<20} ${expense['amount']:<10.2f}")
 
 
+def delete_expense(expense_id, file_path="expenses.json"):
+    expenses = load_data(file_path)
+    #Find the expense with the given ID
+    updated_expenses = [expense for expense in expenses if expense["id"] != expense_id]
+
+    if len(expenses) == len(updated_expenses):
+        print(f"No expense found with ID: {expense_id}")
+    else:
+        save_data(updated_expenses, file_path)
+        print(f"Expense deleted successfully (ID: {expense_id})")
+
+
 def main():
     parser = create_parser()#Create the argument parser
     args = parser.parse_args() #Parse the arguments from the command line
 
     #Check which command was used
-    if args.command == "hello":
-        print("Hello from Expense Tracker!")
-    elif args.command == "add":
+    if args.command == "add":
         add_expense(args.description, args.amount)
+    elif args.command == "list":
+        list_expenses()
+    elif args.command == "delete":
+        delete_expense(args.id)
     else:
         parser.print_help()
 
