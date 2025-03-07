@@ -16,6 +16,10 @@ def create_parser():
     add_parser = subparsers.add_parser("add", help="Add a new expense")
     add_parser.add_argument("--description", required=True, help="Description of the expense")
     add_parser.add_argument("--amount", type=float, required=True, help="Amount of the expense")
+
+    #command to list all expenses
+    list_parser = subparsers.add_parser("list", help="List all expenses")
+
     return parser
 
 def load_data(file_path="expenses.json"):
@@ -50,6 +54,18 @@ def add_expense(description, amount, file_path="expenses.json"):
     expenses.append(new_expense)
     save_data(expenses, file_path)
     print(f"Expense added successfully (ID: {new_id})")
+
+
+def list_expenses(file_path="expenses.json"):
+    expenses = load_data(file_path)
+    if not expenses:
+        print("No expenses recorded.")
+        return
+    print(f"{'ID':<5} {'Date':<12} {'Description':<20} {'Amount':<10}")
+    print("-" * 50)
+    for expense in expenses:
+        print(f"{expense['id']:<5} {expense['date']:<12} {expense['description']:<20} ${expense['amount']:<10.2f}")
+
 
 def main():
     parser = create_parser()#Create the argument parser
