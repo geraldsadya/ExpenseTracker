@@ -24,6 +24,16 @@ def create_parser():
     delete_parser = subparsers.add_parser("delete", help="Delete an expense by ID")
     delete_parser.add_argument("--id", type=int, required=True, help="ID of the expense to delete")
 
+    #command to update an expense
+    update_parser = subparsers.add_parser("update", help="Update an expense by ID")
+    update_parser.add_argument("--id", type=int, required=True, help="ID of the expense to update")
+    update_parser.add_argument("--description", help="New description for the expense")
+    update_parser.add_argument("--amount", type=float, help="New amount for the expense")
+
+    #command to summarize expenses
+    summary_parser = subparsers.add_parser("summary", help="Summarize expenses")
+    summary_parser.add_argument("--month", type=int, help="Filter expenses by month (1-12)")
+
     return parser
 
 def load_data(file_path="expenses.json"):
@@ -83,6 +93,45 @@ def delete_expense(expense_id, file_path="expenses.json"):
         print(f"Expense deleted successfully (ID: {expense_id})")
 
 
+def update_expense(expense_id, description=None, amount=None, file_path="expenses.json"):
+    expenses = load_data(file_path)
+    found = False
+    for expense in expenses:
+        if expense["id"] == expense_id:
+            if description:
+                expense["description"] = description
+            if amount is not None:  #allow 0 as a valid value
+                expense["amount"] = amount
+            found = True
+            break
+
+    if found:
+        save_data(expenses, file_path)
+        print(f"Expense updated successfully (ID: {expense_id})")
+    else:
+        print(f"No expense found with ID: {expense_id}")
+
+def summarize_expenses(month=None, file_path="expenses.json"):
+    expenses = load_data(file_path)
+    total = 0
+    filtered_expenses = expenses
+
+    if month is not None:
+        #Filter expenses by month (assumes the date is in "YYYY-MM-DD" format)
+        filtered_expenses = [
+            expense for expense in expenses
+            if datetime.strptime(expense["date"], "%Y-%m-%d").month == month
+        ]
+
+    for expense in filtered_expenses:
+        total += expense["amount"]
+    if month is None:
+        print(f"Total expenses: ${total:.2f}")
+    else:
+        print(f"Total expenses for month {month}: ${total:.2f}")
+
+
+
 def main():
     parser = create_parser()#Create the argument parser
     args = parser.parse_args() #Parse the arguments from the command line
@@ -94,6 +143,10 @@ def main():
         list_expenses()
     elif args.command == "delete":
         delete_expense(args.id)
+    elif args.command == "update":
+        update_expense(args.id, args.description, args.amount)
+    elif args.command == "summary":
+        summarize_expenses(args.month)
     else:
         parser.print_help()
 
