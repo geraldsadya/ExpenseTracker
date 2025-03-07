@@ -1,8 +1,4 @@
-Alright, here's a **high-quality, professional, and visually appealing README** that will make your Expense Tracker CLI **stand out** on GitHub. 🚀  
 
----
-
-```markdown
 # 💰 Expense Tracker CLI
 
 A **powerful yet simple** command-line tool built in Python to help you **track and manage expenses effortlessly.**  
